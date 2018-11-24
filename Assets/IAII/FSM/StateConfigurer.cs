@@ -4,11 +4,10 @@ namespace IAII
 {
     public class StateConfigurer<T>
     {
-        //estado que despues le meto transiciones
-        State<T> instance;
+        State<T> instance;//estado que despues le meto transiciones
         Dictionary<T, Transition<T>> transitions = new Dictionary<T, Transition<T>>();
 
-        //eeesto lo va a llamar la extension de abajo 
+        //Constructor.
         public StateConfigurer(State<T> _state)
         {
             instance = _state;

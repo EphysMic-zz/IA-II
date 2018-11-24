@@ -15,17 +15,16 @@ public class SpatialGrid : MonoBehaviour
 
     private Dictionary<GridEntity, Tuple<int, int>> lastPositions;
     private HashSet<GridEntity>[,] buckets;
-
     readonly public Tuple<int, int> Outside = Tuple.Create(-1, -1);
-
     readonly public GridEntity[] Empty = new GridEntity[0];
-
 
     private void Awake()
     {
+        //Inicializo las listas.
         lastPositions = new Dictionary<GridEntity, Tuple<int, int>>();
         buckets = new HashSet<GridEntity>[width, height];
 
+        //Inicializo la grid.
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++)
                 buckets[i, j] = new HashSet<GridEntity>();
@@ -38,7 +37,6 @@ public class SpatialGrid : MonoBehaviour
             UpdateEntity(e);
         }
     }
-
     public void UpdateEntity(GridEntity entity)
     {
         var lastPos = lastPositions.ContainsKey(entity) ? lastPositions[entity] : Outside;
@@ -88,9 +86,14 @@ public class SpatialGrid : MonoBehaviour
         return Tuple.Create(Mathf.FloorToInt((pos.x - x) / cellWidth),Mathf.FloorToInt((pos.z - z) / cellHeight));
     }
 
+    /// <summary>
+    /// Determina si la entidad existe dentro de la grilla.
+    /// </summary>
+    /// <param name="position">Posiciones (X, Y) de la entidad.</param>
+    /// <returns>Verdadero si la entidad existe dentro de los limites de la grilla.</returns>
     public bool IsInsideGrid(Tuple<int, int> position)
     {
-        return 0 <= position.Item1 && position.Item1 < width && 0 <= position.Item2 && position.Item2 < height;
+        return position.Item1 >= 0 && position.Item1 < width && position.Item2 >= 0 && position.Item2 < height;
     }
 
     void OnDestroy()
@@ -111,7 +114,6 @@ public class SpatialGrid : MonoBehaviour
             yield return child;
         }
     }
-
     IEnumerable<T> Generate<T>(T seed, Func<T, T> mutate)
     {
         T accum = seed;
@@ -121,6 +123,7 @@ public class SpatialGrid : MonoBehaviour
             accum = mutate(accum);
         }
     }
+
     #endregion
 
     #region GRAPHIC REPRESENTATION

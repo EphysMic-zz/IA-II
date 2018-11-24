@@ -44,6 +44,5 @@ namespace IAII
         public void LateUpdate() { OnLateUpdate(); }
         public void FixedUpdate() { OnFixedUpdate(); }
         public void Exit(T input) { OnExit(input); }
-
     }
 }

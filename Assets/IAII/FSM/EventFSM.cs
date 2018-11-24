@@ -1,18 +1,18 @@
-﻿using System;
-
-namespace IAII
+﻿namespace IAII
 {
     public class EventFSM<T>
     {
-        private State<T> current;
+        State<T> current;
+        public State<T> Current { get { return current; } }
 
+        //Constructor.
         public EventFSM(State<T> init)
         {
             current = init;
             current.Enter(default(T));
         }
 
-        public void SendInput(T input)
+        public void Feed(T input)
         {
             State<T> newState;
 
@@ -24,18 +24,14 @@ namespace IAII
             }
         }
 
-        public State<T> Current { get { return current; } }
-
         public void Update()
         {
             current.Update();
         }
-
         public void LateUpdate()
         {
             current.LateUpdate();
         }
-
         public void FixedUpdate()
         {
             current.FixedUpdate();
