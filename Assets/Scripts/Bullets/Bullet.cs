@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.Linq;
 
 public class Bullet : MonoBehaviour
@@ -12,13 +12,12 @@ public class Bullet : MonoBehaviour
     private void Start()
     {
         myQueries = GetComponent<Queries>();
-
     }
     void Update()
     {
         transform.position += transform.forward * Time.deltaTime * speed;
-
     }
+
     private void OnCollisionEnter(Collision c)
     {
         var enemies = myQueries.Query();

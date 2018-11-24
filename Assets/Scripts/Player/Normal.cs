@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Normal : Bullets {
+public class Normal : Bullets{
     //La bala rapida funciona desde este script, pero en Slimehero se cambia la velocidad :V
-    //Al igual que la big bullet :VVV
+
     public Vector3 mouseRay;
     Camera cam;
 

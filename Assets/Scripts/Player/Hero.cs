@@ -38,7 +38,6 @@ public class Hero : MonoBehaviour
     {
         myFSM.Update();
 
-
         #region negrada
         if (Input.GetKeyDown(KeyCode.E))
             mySkills.Expl();
@@ -100,7 +99,7 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.JUMP, jump)
             .Done();
 
-        StateConfigurer.Create(shoot).
+        StateConfigurer.Create(shoot)
             .SetTransition(PlayerInputs.MOVE, movement)
             .SetTransition(PlayerInputs.EXPLOTION, explotion)
             .SetTransition(PlayerInputs.DIE, die)
@@ -152,12 +151,8 @@ public class Hero : MonoBehaviour
         {
             //if (Input.GetKeyDown(KeyCode.Space))
             //    SendInputToFSM(PlayerInputs.JUMP);
-            print("Velocidad en y: " + rb.velocity.y);
-            if (rb.velocity.y < 0)
-            {
-                print("La velocidad esta disminuyendo");
-                rb.AddForce(-transform.up * falloffForce, ForceMode.Force);
-            }
+            //print("Velocidad en y: " + rb.velocity.y);
+            if (rb.velocity.y < 0) rb.AddForce(-transform.up * falloffForce, ForceMode.Force);
 
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         };

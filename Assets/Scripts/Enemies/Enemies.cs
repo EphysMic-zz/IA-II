@@ -187,6 +187,11 @@ public class Enemies : MonoBehaviour
     {
         Debug.Log("attacking");
     }
+    public void Death()
+    {
+        Debug.Log("Mori");
+        SendInputToFSM(StateInput.DIE);
+    }
 
     //-------------------------------Debug------------------------------------------
     void OnDrawGizmos()
