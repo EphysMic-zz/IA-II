@@ -37,14 +37,6 @@ public class Hero : MonoBehaviour
     private void Update()
     {
         myFSM.Update();
-
-        #region negrada
-        if (Input.GetKeyDown(KeyCode.E))
-            mySkills.Expl();
-
-        if (Input.GetKeyDown(KeyCode.R))
-            Shoot();
-        #endregion
     }
     private void FixedUpdate()
     {
@@ -116,20 +108,27 @@ public class Hero : MonoBehaviour
         {
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
                 SendInputToFSM(PlayerInputs.MOVE);
-            else if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
                 SendInputToFSM(PlayerInputs.JUMP);
-            else if (isDead)
+            if (Input.GetKeyDown(KeyCode.R))
+                SendInputToFSM(PlayerInputs.SHOOT);
+            if (Input.GetKeyDown(KeyCode.E))
+                SendInputToFSM(PlayerInputs.EXPLOTION);
+            if (isDead)
                 SendInputToFSM(PlayerInputs.DIE);
         };
         #endregion
         #region movimiento
-
         movement.OnUpdate += () =>
         {
             if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
                 SendInputToFSM(PlayerInputs.IDLE);
             else if (Input.GetKeyDown(KeyCode.Space))
                 SendInputToFSM(PlayerInputs.JUMP);
+            else if (Input.GetKeyDown(KeyCode.R))
+                SendInputToFSM(PlayerInputs.SHOOT);
+            if (Input.GetKeyDown(KeyCode.E))
+                SendInputToFSM(PlayerInputs.EXPLOTION);
             else if (isDead)
                 SendInputToFSM(PlayerInputs.DIE);
 
@@ -155,6 +154,8 @@ public class Hero : MonoBehaviour
             if (rb.velocity.y < 0) rb.AddForce(-transform.up * falloffForce, ForceMode.Force);
 
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            if (Input.GetKeyDown(KeyCode.E))
+                SendInputToFSM(PlayerInputs.EXPLOTION);
         };
 
         #endregion
@@ -165,8 +166,7 @@ public class Hero : MonoBehaviour
             isDead = true;
         };
         #endregion
-     /*   #region explotion
-
+        #region explotion
         explotion.OnEnter += x =>
         {
             mySkills.Expl();
@@ -174,15 +174,30 @@ public class Hero : MonoBehaviour
         };
         explotion.OnUpdate += () =>
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("OnUpdate");
-                SendInputToFSM(PlayerInputs.EXPLOTION);
-            }
+            Debug.Log("OnUpdate");
+            SendInputToFSM(PlayerInputs.IDLE);
         };
-
-        #endregion*/
-
+        explotion.OnExit += x =>
+        {
+            print("Salí de Explotion");
+        };
+        #endregion
+        #region Shoot
+        shoot.OnEnter += x =>
+        {
+            print("Entré en Shoot");
+        };
+        shoot.OnUpdate += () =>
+        {
+            print("Estoy en Shoot");
+            Shoot();
+            SendInputToFSM(PlayerInputs.IDLE);
+        };
+        shoot.OnExit += (x) =>
+        {
+            print("Sali de Shoot");
+        };
+        #endregion
 
         //estado inicial
         myFSM = new EventFSM<PlayerInputs>(idle);
@@ -211,8 +226,12 @@ public class Hero : MonoBehaviour
     }
     public void Shoot()
     {
-        bullet.transform.position = new Vector3(transform.position.x + 1, transform.position.y + 1, transform.position.z + 1);
-        Instantiate(bullet);
+        if (bullet != null)
+        {
+            var newBullet = Instantiate(bullet);
+            newBullet.transform.position = new Vector3(transform.position.x + 1, transform.position.y + 1, transform.position.z + 1);
+        }
+        else print("El prefab de la bala no esta seteada.");
     }
 
     //---------------------------Colisiones--------------------------------------------
