@@ -30,6 +30,6 @@ public class Skills : MonoBehaviour
     {
         var enemies = myQueries.Query();
         //enemies.OfType<Enemy>().Where(x => x != null && x.hp < 20).ToList().ForEach(x => x.Death());
-        enemies.Select(x => x.GetComponent<Enemy>()).Where(x => x.hp < 20).ToList().ForEach(x => x.Death());
+        enemies.Select(x => x.GetComponent<Enemies>()).Where(x => x.life < 20).ToList().ForEach(x => x.Death());
     }
 }

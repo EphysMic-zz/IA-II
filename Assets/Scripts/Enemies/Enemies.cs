@@ -192,6 +192,10 @@ public class Enemies : MonoBehaviour
         Debug.Log("Mori");
         SendInputToFSM(StateInput.DIE);
     }
+    public void TakeDamage()
+    {
+        life -= 15;
+    }
 
     //-------------------------------Debug------------------------------------------
     void OnDrawGizmos()
@@ -205,8 +209,8 @@ public class Enemies : MonoBehaviour
         Vector3 rightLimit = Quaternion.AngleAxis(viewAngle, transform.up) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + (rightLimit * viewDistance));
 
-        Vector3 leftLimit = Quaternion.AngleAxis(-viewAngle, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistance));
+
+//        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistance));
 
         Gizmos.color = _targetInSight ? Color.green : Color.red;
         Gizmos.DrawLine(transform.position, target.transform.position);

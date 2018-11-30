@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
         {
             Destroy(gameObject);
             Debug.Log("sarasa");
-            enemies.Select(x => x.GetComponent<Enemies>()).OrderBy(x => x.life).Take(2).ToList().ForEach(x => x.Death());
+            enemies.Select(x => x.GetComponent<Enemies>()).OrderBy(x => x.life).Take(2).ToList().ForEach(x => x.TakeDamage());
         }
     }
 }
