@@ -33,6 +33,7 @@ public class Enemies : MonoBehaviour
     private void Update()
     {
         myFSM.Update();
+      //  TakeDamage();
     }
     private void FixedUpdate()
     {
@@ -87,15 +88,21 @@ public class Enemies : MonoBehaviour
         #region Estados
 
         #region idle
-        idle.OnEnter += (x) => { print("Entré en idlle"); };
+        idle.OnEnter += (x) =>
+        {
+            //print("Entré en idlle");
+        };
         idle.OnUpdate += () =>
         {
-            print("Idlle Update");
+            //   print("Idlle Update");
             bool enemyOnSight = LineOfSight();
             //print("El enemigo esta en vista?: " + enemyOnSight);
             SendInputToFSM(enemyOnSight ? StateInput.SEARCH : StateInput.IDLE);
         };
-        idle.OnExit += (x) => { print("Sali de idlle"); };
+        idle.OnExit += (x) =>
+        {
+            //print("Sali de idlle");
+        };
         #endregion
 
         #region search
@@ -139,6 +146,7 @@ public class Enemies : MonoBehaviour
         myFSM = new EventFSM<StateInput>(idle);
         #endregion
     }
+
     void SendInputToFSM(StateInput inp)
     {
         myFSM.Feed(inp);
@@ -146,10 +154,8 @@ public class Enemies : MonoBehaviour
 
     //------------------------Class Methods--------------------------------------------
 
-    /// <summary>
-    /// Chequea si hay un objetivo visible.
-    /// </summary>
-    /// <returns>Verdadero si el objetivo es visible.</returns>
+    // Chequea si hay un objetivo visible.
+    // <returns>Verdadero si el objetivo es visible.</returns>
     public bool LineOfSight()
     {
         _dirToTarget = (target.transform.position - transform.position).normalized;
@@ -173,10 +179,8 @@ public class Enemies : MonoBehaviour
             return _targetInSight = false;
         }
     }
-    /// <summary>
-    /// Chequea si el objetivo esta dentro del rango de ataque.
-    /// </summary>
-    /// <returns>Verdadero si es posible atacar al objetivo.</returns>
+    // Chequea si el objetivo esta dentro del rango de ataque.
+    // <returns>Verdadero si es posible atacar al objetivo.</returns>
     public bool distanceToAttack()
     {
         var distanceToAttack = Vector3.Distance(transform.position, target.transform.position);
@@ -189,12 +193,13 @@ public class Enemies : MonoBehaviour
     }
     public void Death()
     {
-        Debug.Log("Mori");
+        Debug.Log("Mori");        
         SendInputToFSM(StateInput.DIE);
     }
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
-        life -= 15;
+        Debug.Log(life);
+        life -= damage;
     }
 
     //-------------------------------Debug------------------------------------------
@@ -210,7 +215,7 @@ public class Enemies : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + (rightLimit * viewDistance));
 
 
-//        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistance));
+        //        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistance));
 
         Gizmos.color = _targetInSight ? Color.green : Color.red;
         Gizmos.DrawLine(transform.position, target.transform.position);

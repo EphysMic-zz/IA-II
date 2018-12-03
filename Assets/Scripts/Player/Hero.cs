@@ -27,6 +27,7 @@ public class Hero : MonoBehaviour
     public Queries myQuery;
     public Skills mySkills;
 
+
     //------------------------Mono Methods---------------------------------------------
     private void Awake()
     {
@@ -92,6 +93,7 @@ public class Hero : MonoBehaviour
             .Done();
 
         StateConfigurer.Create(shoot)
+            .SetTransition(PlayerInputs.IDLE, idle)
             .SetTransition(PlayerInputs.MOVE, movement)
             .SetTransition(PlayerInputs.EXPLOTION, explotion)
             .SetTransition(PlayerInputs.DIE, die)
@@ -170,32 +172,33 @@ public class Hero : MonoBehaviour
         explotion.OnEnter += x =>
         {
             mySkills.Expl();
-            Debug.Log("OnEnter");
+           // Debug.Log("OnEnter");
         };
         explotion.OnUpdate += () =>
         {
-            Debug.Log("OnUpdate");
+            // Debug.Log("OnUpdate");
             SendInputToFSM(PlayerInputs.IDLE);
         };
         explotion.OnExit += x =>
         {
-            print("Salí de Explotion");
+            // print("Salí de Explotion");
         };
         #endregion
+
         #region Shoot
         shoot.OnEnter += x =>
         {
-            print("Entré en Shoot");
+         //   print("Entré en Shoot");
+            Shoot();
         };
         shoot.OnUpdate += () =>
         {
-            print("Estoy en Shoot");
-            Shoot();
+          //  print("Estoy en Shoot");
             SendInputToFSM(PlayerInputs.IDLE);
         };
         shoot.OnExit += (x) =>
         {
-            print("Sali de Shoot");
+           // print("Sali de Shoot");
         };
         #endregion
 
@@ -231,7 +234,6 @@ public class Hero : MonoBehaviour
             var newBullet = Instantiate(bullet);
             newBullet.transform.position = new Vector3(transform.position.x + 1, transform.position.y + 1, transform.position.z + 1);
         }
-        else print("El prefab de la bala no esta seteada.");
     }
 
     //---------------------------Colisiones--------------------------------------------
@@ -239,5 +241,6 @@ public class Hero : MonoBehaviour
     {
         SendInputToFSM(PlayerInputs.IDLE);
     }
+
 }
 
