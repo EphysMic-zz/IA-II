@@ -35,4 +35,16 @@ public class Skills : MonoBehaviour
         go.transform.position = transform.position;
         enemies.Select(x => x.GetComponent<Enemies>()).Where(x => x.life < 20).ToList().ForEach(x => x.Death());
     }
+
+    public void test()
+    {
+        Debug.Log("el test funciona");
+        var enemies = myQueries.Query();
+        
+        enemies.Select(x => x.GetComponent<Enemies>())
+                .Where(x => x.life == 100)
+                .Concat(enemies.Select(y => y.GetComponent<Enemies>()).Where(y => y.test))
+                .ToList()
+                .ForEach(x => x.TakeDamage(100));       
+    }
 }

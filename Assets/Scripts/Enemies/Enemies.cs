@@ -18,8 +18,10 @@ public class Enemies : MonoBehaviour
     float _angleToTarget;
     float _distanceToTarget;
     bool _targetInSight = false;
+    public GameObject explotionVFX;
 
     EventFSM<StateInput> myFSM;
+    public bool test;
     //Rigidbody rb;
 
     //------------------------Mono Methods---------------------------------------------
@@ -29,15 +31,22 @@ public class Enemies : MonoBehaviour
         //rb = GetComponent<Rigidbody>();
         target = FindObjectOfType<Hero>().gameObject;
         SetStates();
+        if (test)
+        {
+            CorreCorreCorre();
+            Debug.Log(test);
+        }
     }
     private void Update()
     {
         myFSM.Update();
-      //  TakeDamage();
+        if (life <= 0)
+            SendInputToFSM(StateInput.DIE);
     }
     private void FixedUpdate()
     {
         myFSM.FixedUpdate();
+
     }
 
     //------------------------State Sets-----------------------------------------------
@@ -137,8 +146,7 @@ public class Enemies : MonoBehaviour
         #region die
         die.OnUpdate += () =>
         {
-            Debug.Log("Enemy Dead");
-            Destroy(gameObject, 2f);
+            Destroy(gameObject);
         };
         #endregion
 
@@ -193,31 +201,43 @@ public class Enemies : MonoBehaviour
     }
     public void Death()
     {
-        Debug.Log("Mori");        
+        GameObject go = Instantiate(explotionVFX);
+        go.transform.position = transform.position;
         SendInputToFSM(StateInput.DIE);
     }
     public void TakeDamage(int damage)
     {
         Debug.Log(life);
         life -= damage;
+        GameObject go = Instantiate(explotionVFX);
+        go.transform.position = transform.position;
     }
-
-    //-------------------------------Debug------------------------------------------
-    void OnDrawGizmos()
+    private void OnTriggerEnter(Collider other)
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
+        if (other.gameObject.tag == "bullet")
+            TakeDamage(10);
 
-        //Gizmos.DrawLine(transform.position, transform.position + (transform.forward * viewDistance));
-
-        Gizmos.color = Color.cyan;
-        Vector3 rightLimit = Quaternion.AngleAxis(viewAngle, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (rightLimit * viewDistance));
-
-
-        //        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistance));
-
-        Gizmos.color = _targetInSight ? Color.green : Color.red;
-        Gizmos.DrawLine(transform.position, target.transform.position);
     }
+    public bool CorreCorreCorre()
+    {
+        return true;
+    }
+    //-------------------------------Debug------------------------------------------
+    /*  void OnDrawGizmos()
+      {
+          Gizmos.color = Color.blue;
+          Gizmos.DrawWireSphere(transform.position, viewDistance);
+
+          //Gizmos.DrawLine(transform.position, transform.position + (transform.forward * viewDistance));
+
+          Gizmos.color = Color.cyan;
+          Vector3 rightLimit = Quaternion.AngleAxis(viewAngle, transform.up) * transform.forward;
+          Gizmos.DrawLine(transform.position, transform.position + (rightLimit * viewDistance));
+
+
+          //        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistance));
+
+          Gizmos.color = _targetInSight ? Color.green : Color.red;
+          Gizmos.DrawLine(transform.position, target.transform.position);
+      }*/
 }

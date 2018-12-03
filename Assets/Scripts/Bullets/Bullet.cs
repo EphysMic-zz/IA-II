@@ -7,7 +7,6 @@ using System.Linq;
 public class Bullet : MonoBehaviour
 {
     Queries myQueries;
-    public GameObject collisionVFX;
 
     public float speed;
     private void Start()
@@ -25,11 +24,9 @@ public class Bullet : MonoBehaviour
 
         if (c.gameObject.tag == "enemy")
         {
+            Destroy(gameObject);
             Debug.Log("sarasa");
             enemies.Select(x => x.GetComponent<Enemies>()).OrderBy(x => x.life).Take(2).ToList().ForEach(x => x.TakeDamage(20));
-            GameObject go = Instantiate(collisionVFX);
-            go.transform.position = transform.position;
-            Destroy(gameObject);
         }
     }
 }

@@ -7,7 +7,7 @@ using IAII;
 public class Hero : MonoBehaviour
 {
     //IA2- P3
-    public enum PlayerInputs { MOVE, EXPLOTION, DIE, IDLE, JUMP, SHOOT }
+    public enum PlayerInputs { MOVE, EXPLOTION, DIE, IDLE, JUMP, SHOOT, NOSECOMOLLAMARLO }
     private EventFSM<PlayerInputs> myFSM;
     private Rigidbody rb;
 
@@ -38,6 +38,8 @@ public class Hero : MonoBehaviour
     private void Update()
     {
         myFSM.Update();
+        if (Input.GetKeyDown(KeyCode.M))
+            mySkills.test();
     }
     private void FixedUpdate()
     {
@@ -56,6 +58,7 @@ public class Hero : MonoBehaviour
         var explotion = new State<PlayerInputs>("EXPLOTION");
         var die = new State<PlayerInputs>("DIE");
         var shoot = new State<PlayerInputs>("SHOOT");
+        var nosecomollamarlo = new State<PlayerInputs>("NOSECOMOLLAMARLO");
         #endregion
 
         #region transiciones
@@ -66,6 +69,7 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.DIE, die)
             .SetTransition(PlayerInputs.SHOOT, shoot)
             .SetTransition(PlayerInputs.JUMP, jump)
+            .SetTransition(PlayerInputs.NOSECOMOLLAMARLO, nosecomollamarlo)
             .Done();
 
         StateConfigurer.Create(movement)
@@ -74,6 +78,7 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.IDLE, idle)
             .SetTransition(PlayerInputs.SHOOT, shoot)
             .SetTransition(PlayerInputs.JUMP, jump)
+            .SetTransition(PlayerInputs.NOSECOMOLLAMARLO, nosecomollamarlo)
             .Done();
 
         StateConfigurer.Create(jump)
@@ -82,6 +87,7 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.DIE, die)
             .SetTransition(PlayerInputs.SHOOT, shoot)
             .SetTransition(PlayerInputs.EXPLOTION, explotion)
+            .SetTransition(PlayerInputs.NOSECOMOLLAMARLO, nosecomollamarlo)
             .Done();
 
         StateConfigurer.Create(explotion)
@@ -90,6 +96,7 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.DIE, die)
             .SetTransition(PlayerInputs.SHOOT, shoot)
             .SetTransition(PlayerInputs.JUMP, jump)
+            .SetTransition(PlayerInputs.NOSECOMOLLAMARLO, nosecomollamarlo)
             .Done();
 
         StateConfigurer.Create(shoot)
@@ -98,8 +105,19 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.EXPLOTION, explotion)
             .SetTransition(PlayerInputs.DIE, die)
             .SetTransition(PlayerInputs.JUMP, jump)
+            .SetTransition(PlayerInputs.NOSECOMOLLAMARLO, nosecomollamarlo)
             .Done();
 
+        StateConfigurer.Create(nosecomollamarlo)
+            .SetTransition(PlayerInputs.IDLE, idle)
+            .SetTransition(PlayerInputs.MOVE, movement)
+            .SetTransition(PlayerInputs.EXPLOTION, explotion)
+            .SetTransition(PlayerInputs.DIE, die)
+            .SetTransition(PlayerInputs.JUMP, jump)
+            .SetTransition(PlayerInputs.SHOOT, shoot)
+            .Done();
+
+        
         StateConfigurer.Create(die).Done();
         #endregion
 
@@ -120,6 +138,7 @@ public class Hero : MonoBehaviour
                 SendInputToFSM(PlayerInputs.DIE);
         };
         #endregion
+
         #region movimiento
         movement.OnUpdate += () =>
         {
@@ -142,6 +161,7 @@ public class Hero : MonoBehaviour
                 rb.velocity = Vector3.zero;
         };
         #endregion
+
         #region Jump
         jump.OnEnter += x =>
           {
@@ -161,6 +181,7 @@ public class Hero : MonoBehaviour
         };
 
         #endregion
+
         #region dead
         die.OnUpdate += () =>
         {
@@ -168,11 +189,12 @@ public class Hero : MonoBehaviour
             isDead = true;
         };
         #endregion
+
         #region explotion
         explotion.OnEnter += x =>
         {
             mySkills.Expl();
-           // Debug.Log("OnEnter");
+            // Debug.Log("OnEnter");
         };
         explotion.OnUpdate += () =>
         {
@@ -188,17 +210,17 @@ public class Hero : MonoBehaviour
         #region Shoot
         shoot.OnEnter += x =>
         {
-         //   print("Entré en Shoot");
+            //   print("Entré en Shoot");
             Shoot();
         };
         shoot.OnUpdate += () =>
         {
-          //  print("Estoy en Shoot");
+            //  print("Estoy en Shoot");
             SendInputToFSM(PlayerInputs.IDLE);
         };
         shoot.OnExit += (x) =>
         {
-           // print("Sali de Shoot");
+            // print("Sali de Shoot");
         };
         #endregion
 
