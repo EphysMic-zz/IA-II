@@ -38,8 +38,6 @@ public class Hero : MonoBehaviour
     private void Update()
     {
         myFSM.Update();
-        if (Input.GetKeyDown(KeyCode.M))
-            mySkills.test();
     }
     private void FixedUpdate()
     {
@@ -117,7 +115,6 @@ public class Hero : MonoBehaviour
             .SetTransition(PlayerInputs.SHOOT, shoot)
             .Done();
 
-        
         StateConfigurer.Create(die).Done();
         #endregion
 
@@ -136,6 +133,8 @@ public class Hero : MonoBehaviour
                 SendInputToFSM(PlayerInputs.EXPLOTION);
             if (isDead)
                 SendInputToFSM(PlayerInputs.DIE);
+            if (Input.GetKeyDown(KeyCode.M))
+                SendInputToFSM(PlayerInputs.NOSECOMOLLAMARLO);
         };
         #endregion
 
@@ -144,14 +143,16 @@ public class Hero : MonoBehaviour
         {
             if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
                 SendInputToFSM(PlayerInputs.IDLE);
-            else if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
                 SendInputToFSM(PlayerInputs.JUMP);
-            else if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R))
                 SendInputToFSM(PlayerInputs.SHOOT);
             if (Input.GetKeyDown(KeyCode.E))
                 SendInputToFSM(PlayerInputs.EXPLOTION);
-            else if (isDead)
+            if (isDead)
                 SendInputToFSM(PlayerInputs.DIE);
+            if (Input.GetKeyDown(KeyCode.M))
+                SendInputToFSM(PlayerInputs.NOSECOMOLLAMARLO);
 
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         };
@@ -223,7 +224,14 @@ public class Hero : MonoBehaviour
             // print("Sali de Shoot");
         };
         #endregion
-
+        #region Test
+        nosecomollamarlo.OnEnter += x =>
+        {
+            print("Worth!");
+            mySkills.test();
+            SendInputToFSM(PlayerInputs.IDLE);
+        };
+        #endregion
         //estado inicial
         myFSM = new EventFSM<PlayerInputs>(idle);
         #endregion
