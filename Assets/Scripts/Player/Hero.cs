@@ -224,6 +224,7 @@ public class Hero : MonoBehaviour
             // print("Sali de Shoot");
         };
         #endregion
+
         #region Test
         nosecomollamarlo.OnEnter += x =>
         {

@@ -21,7 +21,7 @@ public class Enemies : MonoBehaviour
     public GameObject explotionVFX;
 
     EventFSM<StateInput> myFSM;
-    public bool test;
+    public bool coward;
     //Rigidbody rb;
 
     //------------------------Mono Methods---------------------------------------------
@@ -31,10 +31,9 @@ public class Enemies : MonoBehaviour
         //rb = GetComponent<Rigidbody>();
         target = FindObjectOfType<Hero>().gameObject;
         SetStates();
-        if (test)
+        if (coward)
         {
             CorreCorreCorre();
-            Debug.Log(test);
         }
     }
     private void Update()
@@ -218,9 +217,9 @@ public class Enemies : MonoBehaviour
             TakeDamage(10);
 
     }
-    public bool CorreCorreCorre()
+    public void CorreCorreCorre()
     {
-        return true;
+
     }
     //-------------------------------Debug------------------------------------------
     /*  void OnDrawGizmos()
